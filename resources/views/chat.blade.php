@@ -38,7 +38,7 @@
                         @else
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    <span id="current_user" class="hidden"></span><span email="{{ Auth::user()->email }}" id="user_current">{{ Auth::user()->name }}</span> <span class="caret"></span>
+                                    <span id="current_user" class="hidden"></span><span id="user_current" email="{{ Auth::user()->email }}" >{{ Auth::user()->name }}</span> <span class="caret"></span>
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
@@ -100,7 +100,7 @@
                 type: "get",
                 success:function(data){
                     $('#btn-input').val('');
-                    var html = '<div class="col-md-8 bg-right"><strong id="username">{{ Auth::user()->name }}</strong> : <span>'+message+'</span></div>';
+                    var html = '<div class="col-md-8 bg-right"><strong id="username" email="{{ Auth::user()->email }}">{{ Auth::user()->name }}</strong> : <span>'+message+'</span></div>';
                     $('.panel-body').append(html);
                 }
             });
@@ -114,20 +114,22 @@
 
         var channel = pusher.subscribe('channel-name');
         channel.bind("App\\Events\\ChatMessageEvent", function(data) {
-            var html = '<div class="col-md-8"><strong id="username"></strong> : <span>'+data.message+'</span></div>';
+            var html = '<div class="col-md-8 bg-left"><strong id="username" email="'+data.email+'">'+data.name+'</strong> : <span>'+data.message+'</span></div>';
             $('.panel-body').append(html);
         });
 
     });
     function Check_User_Current(){
-                var user_current = $('#user_current').html();
-                $('#username').each(function() {
-                console.log($(this).html());
-                  if($(this).html() == user_current){
-                    $(this).parent().addClass('bg-right');
+                var email = $('#user_current').attr('email');
+                console.log(email);
+                $('.panel-body .col-md-8').each(function() {
+
+                console.log($(this).children().attr('email'));
+                  if($(this).children().attr('email') == email){
+                    $(this).addClass('bg-right');
                   }
                   else{
-                      $(this).parent().addClass('bg-left');
+                      $(this).addClass('bg-left');
                   }
                 });
             }

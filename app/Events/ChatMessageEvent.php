@@ -23,10 +23,12 @@ class ChatMessageEvent implements ShouldBroadcast
      */
     public $message;
     public $email;
+    public $name;
     public function __construct(ChatMessage $chatMessage)
     {
         $this->message  = $chatMessage->message;
         $this->email  = $chatMessage->email;
+        $this->name  = User::where('email',$chatMessage->email)->first()->name;
     }
 
     /**

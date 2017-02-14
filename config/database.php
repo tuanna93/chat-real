@@ -45,7 +45,7 @@ return [
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'haihip_vn_d09a'),
             'username' => env('DB_USERNAME', 'haihipvnd09a'),
-            'password' => env('DB_PASSWORD', '123@123'),
+            'password' => env('DB_PASSWORD', '123@123a'),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',
