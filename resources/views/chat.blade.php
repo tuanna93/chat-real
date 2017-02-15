@@ -74,12 +74,12 @@
                     @endforeach
                 </div>
                 <div class="panel-footer">
-                    <div class="input-group">
-                        <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
-                        <span class="input-group-btn">
-                            <a href="#" class="btn btn-warning btn-sm" id="btn-chat">
-                                Send</a>
-                        </span>
+                    <div class="form-group">
+                        <input id="btn-input" type="text" class="form-control input-md" placeholder="Type your message here..." />
+                        {{--<span class="input-group-btn">--}}
+                            {{--<a href="#" class="btn btn-warning btn-sm" id="btn-chat">--}}
+                                {{--Send</a>--}}
+                        {{--</span>--}}
                     </div>
                 </div>
             </div>
@@ -93,18 +93,41 @@
     $(document).ready(function(){
         var email = '{{ Auth::user()->email }}' ;
         Check_User_Current();
-        $('#btn-chat').click(function(){
-            var message = $('#btn-input').val();
-            $.ajax({
-                url: "/pusher/"+message,
-                type: "get",
-                success:function(data){
-                    $('#btn-input').val('');
-                    var html = '<div class="col-md-8 bg-right"><strong id="username" email="{{ Auth::user()->email }}">{{ Auth::user()->name }}</strong> : <span>'+message+'</span></div>';
-                    $('.panel-body').append(html);
+        scroll_boottom();
+        {{--$('#btn-chat').click(function(){--}}
+            {{--var message = $('#btn-input').val();--}}
+            {{--$.ajax({--}}
+                {{--url: "/pusher/"+message,--}}
+                {{--type: "get",--}}
+                {{--success:function(data){--}}
+                    {{--$('#btn-input').val('');--}}
+                    {{--var html = '<div class="col-md-8 bg-right"><strong id="username" email="{{ Auth::user()->email }}">{{ Auth::user()->name }}</strong> : <span>'+message+'</span></div>';--}}
+                    {{--$('.panel-body').append(html);--}}
+
+                {{--}--}}
+            {{--});--}}
+        {{--});--}}
+        $('#btn-input').keypress(function (ev) {
+            var message = $(this).val();
+            var keycode = (ev.keyCode ? ev.keyCode : ev.which);
+            if (keycode == '13') {
+                if(message){
+                    $.ajax({
+                        url: "/pusher/"+message,
+                        type: "get",
+                        success:function(data){
+                            $('#btn-input').val('');
+                            {{--var html = '<div class="col-md-8 bg-right"><strong id="username" email="{{ Auth::user()->email }}">{{ Auth::user()->name }}</strong> : <span>'+message+'</span></div>';--}}
+                            {{--$('.panel-body').append(html);--}}
+
+                        }
+                    });
                 }
-            });
-        });
+                else{
+                    return false;
+                }
+            }
+        })
         Pusher.logToConsole = true;
 
         var pusher = new Pusher('537a019b559f4fed1e18', {
@@ -114,25 +137,37 @@
 
         var channel = pusher.subscribe('channel-name');
         channel.bind("App\\Events\\ChatMessageEvent", function(data) {
-            var html = '<div class="col-md-8 bg-left"><strong id="username" email="'+data.email+'">'+data.name+'</strong> : <span>'+data.message+'</span></div>';
-            $('.panel-body').append(html);
+        if(data.email == email){
+             additem(data,'bg-right');
+        }else{
+            additem(data,'bg-left');
+        }
         });
 
     });
     function Check_User_Current(){
-                var email = $('#user_current').attr('email');
-                console.log(email);
-                $('.panel-body .col-md-8').each(function() {
+        var email = $('#user_current').attr('email');
+        $('.panel-body .col-md-8').each(function() {
 
-                console.log($(this).children().attr('email'));
-                  if($(this).children().attr('email') == email){
-                    $(this).addClass('bg-right');
-                  }
-                  else{
-                      $(this).addClass('bg-left');
-                  }
-                });
-            }
+        console.log($(this).children().attr('email'));
+          if($(this).children().attr('email') == email){
+            $(this).addClass('bg-right');
+          }
+          else{
+              $(this).addClass('bg-left');
+          }
+        });
+    }
+        function additem(data,cl){
+            var html = '<div class="col-md-8 '+cl+'"><strong id="username" email="'+data.email+'">'+data.name+'</strong> : <span>'+data.message+'</span></div>';
+            $('.panel-body').append(html);
+            scroll_boottom();
+        }
+        function scroll_boottom(){
+            $('.panel-body').stop().animate({
+              scrollTop: $('.panel-body')[0].scrollHeight
+            }, 800);
+        }
 </script>
 </body>
 </html>

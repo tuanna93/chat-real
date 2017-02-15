@@ -41,14 +41,14 @@
 }
 .bg-left{
     background-color: #f2dede;;
-    padding: 19px;
+    padding: 5px 5px 5px 10px;
     border: 1px solid #e3e3e3;
     border-radius: 4px;
     margin-bottom:5px;
 }
 .bg-right{
     background-color: #d9edf7;;
-    padding: 19px;
+    padding: 5px 5px 5px 10px;
     border: 1px solid #e3e3e3;
     border-radius: 4px;
     float: right;

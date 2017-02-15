@@ -15,9 +15,9 @@ class ChatMessageController extends Controller
         return view('chat',compact('chat'));
     }
     public function pusher($message){
-        $chat = new ChatMessage();
-        $chat->email = Auth::user()->email;
-        $chat->message = $message;
-        $chat->save();
+//        $chat = new ChatMessage();
+//        $chat->email = Auth::user()->email;
+//        $chat->message = $message;
+//        $chat->save();
     }
 }
